@@ -1,0 +1,52 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %}Lista tarefas agenda{% endblock %}
+{% block content %}
+    <a type="button" class="btn btn-primary mb-2" href="evento/">
+        <img src="{% static 'icons/plus-circle.svg' %}" alt="mdo" width="16" height="16" class="rounded-circle">
+        Novo Evento
+    </a>
+    <a type="button" class="btn btn-secondary mb-2" href="eventos/finalizado/">
+        <img src="{% static 'icons/check.svg' %}" alt="mdo" width="16" height="16" class="rounded-circle">
+        Eventos finalizados
+    </a>
+    
+    <div class="list-group">
+        {% for evento in eventos %}
+        <div class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{ evento.titulo }}</h5>
+            <small class="text-muted">Criado em {{ evento.get_data_criacao }}</small>
+            </div>
+            <p class="mb-1">{{ evento.descricao }}</p>
+            <small class="text-muted">
+            {% for s in evento.STATUS_EVENTO %}
+                {% if s.0 == evento.status %}
+                    {% if s.0 == 1 %}
+                        <img src="{% static 'icons/bookmark-check.svg' %}" alt="mdo" width="20" height="20" class="rounded-circle bg-success">
+                        {{ s.1 }}
+                    {% elif s.0 == 2 %}
+                        <img src="{% static 'icons/bookmark-dash.svg' %}" alt="mdo" width="20" height="20" class="rounded-circle bg-warning">
+                        {{ s.1 }}
+                    {% elif s.0 == 3 %}
+                        <img src="{% static 'icons/bookmark.svg' %}" alt="mdo" width="20" height="20" class="rounded-circle">
+                        {{ s.1 }}
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            {% if evento.get_evento_atrasado %}
+            <div style="color: red;"> Tarefa atrasada</div>
+            {% endif %}
+            <div> </div>
+            <br><br>
+            <a class='btn btn-warning btn-sm' href="/agenda/evento/?id={{ evento.id }}">Editar evento</a>
+            <a class='btn btn-danger btn-sm' href="/agenda/evento/delete/{{ evento.id }}">Excluir evento</a>
+            <!-- </p> -->
+            
+            </small>
+        </div>
+        {% endfor %}
+    </div>
+    
+    
+{% endblock %}

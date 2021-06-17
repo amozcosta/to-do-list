@@ -1,0 +1,49 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %}Novo evento{% endblock %}
+{% block content %}
+    <h2>Novo Evento</h2>
+    <form action="submit" method="POST">
+        {% csrf_token %}
+        <input type="number" name="id_evento" value="{{ evento.id }}" hidden>
+        <div class="mb-3">
+            <label for="evento" class="form-label"><strong>Evento</strong></label>
+            <input type="text" name='evento' class="form-control" id="evento" placeholder="Nome evento" value="{{ evento.titulo }}">
+        </div>
+        <div class="mb-3">
+            <label for="descricao" class="form-label"><strong>Descrição</strong></label>
+            <textarea class="form-control" name='descricao' id="descricao" rows="5">{{ evento.descricao }}</textarea>
+        </div>
+        <div class="mb-3">
+            <label for="data_evento" class="form-label"><strong>Data do evento</strong></label>
+            <input type="datetime-local" name='data_evento' class="form-control" id="data_evento" value="{{ evento.get_data_input_evento }}">
+        </div>
+        {% if evento.status %}
+        <div class="mb-3">
+            <label for="status" class="form-label"><strong>Status:</strong> {% for s in evento.STATUS_EVENTO %}
+                {% if s.0 == evento.status %}
+                    {% if s.0 == 1 %}
+                        {{ s.1 }}
+                        <img src="{% static 'icons/bookmark-check.svg' %}" alt="mdo" width="20" height="20" class="rounded-circle bg-success"> 
+                    {% elif s.0 == 2 %}
+                        {{ s.1 }}
+                        <img src="{% static 'icons/bookmark-dash.svg' %}" alt="mdo" width="20" height="20" class="rounded-circle bg-warning">
+                    {% elif s.0 == 3 %}
+                        <img src="{% static 'icons/bookmark.svg' %}" alt="mdo" width="20" height="20" class="rounded-circle">
+                        {{ s.1 }}
+                    {% endif %}
+
+                {% endif %}
+            {% endfor %}</label>
+            
+            <select name='status' class="form-select" aria-label="Default select example">
+                <option value="{{ evento.status }}"  selected>selecione para alterar o status</option>
+                <option value="1">Finalizado</option>
+                <option value="2">Executando</option>
+            </select>
+        </div>
+        {% endif %}
+        <button class="btn btn-primary" type="submit">Salvar</button>
+        <a class="btn btn-secondary" href="/">Cancelar</a>
+    </form>
+{% endblock %}
